@@ -1,0 +1,16 @@
+Installation de vue CLI:
+npm install -g @vue/cli
+
+puis
+dans le repertoire courant:
+vue create my-app 
+
+configuration à effectuer
+puis, dans my-app:
+npm run serve
+
+Installation du router:
+vue add router
+
+Installation vuex:
+vue add vuex
