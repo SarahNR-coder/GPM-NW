@@ -1,4 +1,5 @@
 <template>
+<div class = "page">
     <header class="home-header">
         <img  src="../assets/icon-left-font.png" alt="logo Groupomania">
         <nav>
@@ -18,7 +19,11 @@
                 <p> Les plus récents</p>
             </article>
         </section>
+        <section class="write-article">
+            <a @click="writeArticle()"><p>Ecrivez votre article</p></a>
+        </section> 
     </main>
+</div>
 </template>
 
 <script>
@@ -31,13 +36,16 @@
             },
             goToAccount: function(){
                 this.$router.push('/account')
+            },
+            writeArticle: function(){
+                this.$router.push('/publish')
             }
         }
     }
 </script>
 
-<style>
-    body{
+<style scoped>
+    .page{
         font-family: 'Noto Sans', sans-serif;
         font-size: 1.5vw;
         padding: 2vw 2vw 2vw 2vw;
@@ -54,14 +62,13 @@
         height: 9vw;
     }
     .home-header img{
-        width: 38vw;
+        width: 35vw;
         object-fit: cover;
-        margin-right : 25vw;
- 
     }
     nav{
         display: flex;
         align-items: center;
+        margin: 0 0 0 25vw;
     }
     nav ul{
         display: flex;
@@ -73,8 +80,8 @@
 
     }
     nav ul li{
-        width: 10vw;
-
+        width: 14vw;
+        font-size: 1.8vw;
     }
     
     a{
@@ -83,13 +90,13 @@
     .forum-access{
         display: flex;
         flex-direction: row;
-        margin-top: 4vw;
+        margin: 4vw 0 4vw 0;
         justify-content: space-around;
         height: 60vw;
     }
 
     .forum-access__article{
-        height: 80%;
+        height: 100%;
         width: 42vw;
         border: 4px solid grey;
         border-radius: 4%;
@@ -97,5 +104,73 @@
 
     .forum-access__article p{
         text-align: center;
+        font-size: 1.8vw;
+    }
+
+    .write-article{
+        text-align: center;
+        text-decoration: underline;
+        font-size: 2.5vw;
+    }
+    @media screen and (max-width:830px){
+        h1{
+            font-size: 2.7vw;
+        }
+
+        nav ul li{
+            width: 20vw;
+            font-size: 2.15vw;
+        }
+
+        .forum-access__article p{
+            font-size: 2.15vw;
+        }
+
+    }
+    @media screen and (max-width: 500px){
+        h1{
+            font-size: 15px;
+        }
+
+        .home-header{
+            justify-content: space-between;
+        }
+
+        nav{
+            margin:0;
+        }
+
+        nav ul{
+            width: 100%;
+        }
+
+        nav ul li{
+            width: 80px;
+            font-size: 12.5px;
+            box-sizing: content;
+        }
+
+        .forum-access{
+            flex-direction: column;
+            height: 130vw;
+            align-items: center;
+        }
+
+        .forum-access__article{
+            width: 75vw;
+            margin: 3.5vw 0 3.5vw 0;
+        }
+
+        .forum-access__article p{
+            font-size: 12.5px;
+        }
+
+        .write-article{
+            font-size: 13px;
+        }
+
+        .home-header img{
+            width: 120px;
+        }
     }
 </style>

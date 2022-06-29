@@ -3,6 +3,7 @@ import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import AccountView from '../views/AccountView.vue'
 import ForumView from '../views/ForumView.vue'
+import PublishView from '../views/PublishView.vue'
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: '/account',
     name: 'account',
     component: AccountView
+  },
+  {
+    path: '/publish',
+    name: 'publish',
+    component: PublishView
   },
   {
     path: '/forum/:id',

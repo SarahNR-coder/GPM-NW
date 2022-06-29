@@ -1,4 +1,5 @@
 <template>
+    <div class="page">
     <div class="banner">
         <img class="banner__image" src="../assets/icon.png" alt="Logo de Groupomania en arrière plan"/>
         <h1 class="banner__text">Groupomania Network</h1>
@@ -36,6 +37,7 @@
                 <button class="entrance-form__form__button"  type= "submit" v-else >Inscrivez-vous</button>
             </div>
         </form>
+    </div>
     </div>
 </template>
 
@@ -112,18 +114,15 @@ export default{
 }
 </script>
 
-<style lang=scss>
-body{
-    font-family: 'Noto Sans', sans-serif;
-    font-size: 1.5vw;
-    padding: 0 16vw 0 16vw;
-}
-
-#app{
+<style scoped>
+.page{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 1.5vw;
+    padding: 0 13vw 0 13vw;
 }
 
 .banner{
@@ -197,7 +196,7 @@ input, label{
     {
         font-size: 2.8vw;
         padding: 0 8vw 0 8vw;
-    };
+    }
     .banner{
         height: 35vw;
         width: 35vw;
@@ -227,7 +226,7 @@ input, label{
     {
         font-size: 3.5vw;
         padding: 0 5.5vw 0 5.5vw;
-    };
+    }
     .banner{
         height: 45vw;
         width: 45vw;
@@ -249,28 +248,6 @@ input, label{
     font-size: 3.2vw
     }
 }
-
-/*
-@media screen and (max-width: 500){
-    body
-    {
-        font-size: 4vw;
-        padding: 0 3vw 0 3vw;
-    };
-    .banner{
-        height: 50vw;
-        width: 50vw;
-    }
-    .banner__text{
-        left:2.8vw;
-        top:20vw;
-        font-size:4vw;       
-    }
-    .slogan{
-        font-size: 4vw;
-    }
-}
-*/
 </style>
 
 
