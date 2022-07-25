@@ -12,7 +12,7 @@
         <h2 class="entrance-form__title" v-else> Inscription </h2>
         <p class="entrance-form__subtitle" v-if="mode == 'login'">Nouveau sur le site?  <span class="entrance-form__subtitle__link" @click="switchToRegister">Inscrivez-vous</span></p>
         <p class="entrance-form__subtitle" v-else> Déjà membre? <span class="entrance-form__subtitle__link" @click="switchToLogin"> Connectez-vous</span></p>
-        <form class="entrance-form__form"  @submit.prevent="checkForm()">
+        <form class="entrance-form__form"  @submit.prevent="registerUser()">
             <div>
                 <label for="email">Email</label>
                 <input class="entrance-form__form__input" v-model="email" type="email" name="email" id="email" @input="checkInvalidEmail()" required>
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default{
     name: 'LoginView',
     data: function () {
@@ -98,6 +100,30 @@ export default{
                 this.errorLastName = false;
             }
         },
+
+        async registerUser(){
+            if(this.mode != 'login'){
+                try{
+                    await axios.post("http://localhost:3000/api/auth/signup",{
+                        email: this.email,
+                        password: this.password,
+                        nom: this.lastName,
+                        prenom : this.firstName,
+                    });
+                    this.email = "";
+                    this.password = "";
+                    this.firstName = "";
+                    this.lastName = "";
+                    this.$router.push('/home');
+                }catch(err) {
+                    console.log(err);
+                }
+            }
+        }
+
+
+
+        /**
         checkForm: function() {
             if(this.mode == 'login'){
                 if(!this.errorEmail && !this.errorPassword){
@@ -109,6 +135,7 @@ export default{
                 }
             }
         }
+        **/
 
     }
 }
