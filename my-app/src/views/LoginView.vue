@@ -33,8 +33,8 @@
                 <p id="passwordNameErrorMsg" class="errorMsg" v-show="errorPassword">Mot de passe trop court</p>
             </div>
             <div>
-                <button class="entrance-form__form__button" type="submit" v-if="mode == 'login'" >Connectez-vous</button>
-                <button class="entrance-form__form__button"  type= "submit" v-else >Inscrivez-vous</button>
+                <button class="entrance-form__form__button" type="submit" v-if="mode == 'login'" @click= "readyToLogin()">Connectez-vous</button>
+                <button class="entrance-form__form__button"  type= "submit" v-else @click= "readyToRegister()">Inscrivez-vous</button>
             </div>
         </form>
     </div>
@@ -56,7 +56,9 @@ export default{
             errorEmail: false,
             errorFirstName: false,
             errorLastName: false,
-            errorPassword: false
+            errorPassword: false,
+            registerReady: false,
+            loginReady: false
         }
     },
 
@@ -69,7 +71,7 @@ export default{
         },
         checkInvalidEmail: function(){
             let regexTestEmail = /^([\w.]+)@([\w]+)([a-zA-Z]{2,})/i;
-            if(!regexTestEmail.test(this.email) == true){
+            if(!regexTestEmail.test(this.email)){
                 this.errorEmail = true;
             }else{
                 this.errorEmail = false;
@@ -100,9 +102,38 @@ export default{
                 this.errorLastName = false;
             }
         },
+        readyToRegister: function(){
+            if(!this.errorEmail && !this.errorFirstName && !this.errorLastName && !this.errorPassword && this.email != '' && this.firstName != '' && this.lastName != '' && this.password != ''){
+                this.registerReady = true;
+            }
+        },
+        readyToLogin: function(){
+            if(!this.errorEmail && !this.errorPassword && this.email != '' && this.password != ''){
+                this.loginReady = true;
+            }
+        },
 
         async registerUser(){
             if(this.mode != 'login'){
+                const payload = {
+                    email: this.email,
+                    password: this.password,
+                    nom: this.lastName,
+                    prenom : this.firstName
+                };
+                const header = { "Sec-Fetch-Site": "cross-site"};
+                await axios.post("http://localhost:3000/api/auth/signup", payload, {header});
+                this.email = "";
+                this.password = "";
+                this.firstName = "";
+                this.lastName = "";
+                this.$router.push('/home');
+            }
+        }
+
+
+        /**async registerUser(){
+            if(this.registerReady && this.mode != 'login'){
                 try{
                     await axios.post("http://localhost:3000/api/auth/signup",{
                         email: this.email,
@@ -119,7 +150,7 @@ export default{
                     console.log(err);
                 }
             }
-        }
+        }*/
 
 
 

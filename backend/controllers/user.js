@@ -8,6 +8,15 @@ exports.signup = async (req, res, next)=> {
     const prenom = req.body.prenom;
     const nom = req.body.nom;
 
+    db.query("SELECT * FROM utilisateur WHERE email = ?", [user], (err, result) => {
+        if (err) throw err;
+        console.log('Les données de la table utilisateur avec le même email sont: ' + JSON.stringify(result));
+    });
+    db.query("INSERT INTO utilisateur (email, nom, prenom, password) VALUES (?,?,?,?)", [user, nom, prenom, hashedPassword], (err, result) => {
+        if(err) throw err;
+        console.log('un utilisateur ajouté!');
+    });
+    
     /*
     db.getConnection( async (err, connection) => {
         if(err) throw (err);
@@ -41,7 +50,7 @@ exports.signup = async (req, res, next)=> {
     });
     */
 
-    db.connect( async function (err, connection) {
+    /*db.connect( async function (err, connection) {
         if(err) throw (err);
         console.log("Connecté, page user controllers!");
 
@@ -71,7 +80,7 @@ exports.signup = async (req, res, next)=> {
             }
 
         })
-    });
+    });*/
 }
 
 
