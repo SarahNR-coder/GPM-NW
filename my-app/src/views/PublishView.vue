@@ -13,13 +13,13 @@
     <main>
         <section class="article-form">
             <h1>Votre article</h1>
-            <form class="article-form__form">
+            <form class="article-form__form" @submit.prevent = "publishingArticle()">
                 <div>
                     <label for="title">Titre de l'article</label>
-                    <textarea id="title"></textarea>
+                    <textarea maxlength=150 id="title" v-model= "title" ></textarea>
 
                     <label for="content">Contenu de l'article</label>
-                    <textarea id="content"></textarea>
+                    <textarea maxlength=1800 id="content" v-model = "article"></textarea>
 
                     <button type="submit" id="post">Postez</button>
                 </div>
@@ -31,9 +31,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default{
     name: 'PublishView',
-
+    data: function () {
+        return{
+            title: "",
+            article: ""
+        }
+    },
     methods: {
         backToHome: function(){
             this.$router.push('/home')
@@ -43,6 +50,26 @@ export default{
         },
         logOut: function(){
             this.$router.push('/')
+        },
+        publishingArticle(){
+            let userId = localStorage.getItem('userId');
+            const payload = {
+                title: this.title,
+                article: this.article,
+                userId: userId
+            };
+            const config = { 
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+            axios.post("http://localhost:3000/api/use/write", payload, config)
+            .then((res) => {
+                console.log("Réponse: " + res.data.message);
+                //this.$store.dispatch('updateRecent');
+                this.$router.push('/home');
+            })
+            .catch( err =>  console.log("l'erreur est: " + err))
         }
     }
 }
@@ -152,6 +179,9 @@ export default{
 
         label{
             font-size: 2.7vw;
+        }
+        textarea{
+            font-size: 2.4vw;
         }
 
         #post{

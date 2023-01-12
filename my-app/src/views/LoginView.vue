@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+<div class="page">
     <div class="banner">
         <img class="banner__image" src="../assets/icon.png" alt="Logo de Groupomania en arrière plan"/>
         <h1 class="banner__text">Groupomania Network</h1>
@@ -12,7 +12,7 @@
         <h2 class="entrance-form__title" v-else> Inscription </h2>
         <p class="entrance-form__subtitle" v-if="mode == 'login'">Nouveau sur le site?  <span class="entrance-form__subtitle__link" @click="switchToRegister">Inscrivez-vous</span></p>
         <p class="entrance-form__subtitle" v-else> Déjà membre? <span class="entrance-form__subtitle__link" @click="switchToLogin"> Connectez-vous</span></p>
-        <form class="entrance-form__form"  @submit.prevent="registerUser()">
+        <form class="entrance-form__form"  @submit.prevent="submitForm()"> 
             <div>
                 <label for="email">Email</label>
                 <input class="entrance-form__form__input" v-model="email" type="email" name="email" id="email" @input="checkInvalidEmail()" required>
@@ -33,16 +33,19 @@
                 <p id="passwordNameErrorMsg" class="errorMsg" v-show="errorPassword">Mot de passe trop court</p>
             </div>
             <div>
-                <button class="entrance-form__form__button" type="submit" v-if="mode == 'login'" @click= "readyToLogin()">Connectez-vous</button>
-                <button class="entrance-form__form__button"  type= "submit" v-else @click= "readyToRegister()">Inscrivez-vous</button>
+                <button class="entrance-form__form__button" type="submit" v-if="mode == 'login'" >Connectez-vous</button>
+                <button class="entrance-form__form__button"  type= "submit" v-else >Inscrivez-vous</button>
             </div>
         </form>
     </div>
-    </div>
+</div>
 </template>
 
 <script>
 import axios from "axios";
+//axios.defaults.headers.common = {'Authorization' : `Bearer ${token}`};
+
+//axios.defaults.headers.common['Authorization']=AUTH_TOKEN;
 
 export default{
     name: 'LoginView',
@@ -57,8 +60,6 @@ export default{
             errorFirstName: false,
             errorLastName: false,
             errorPassword: false,
-            registerReady: false,
-            loginReady: false
         }
     },
 
@@ -102,72 +103,70 @@ export default{
                 this.errorLastName = false;
             }
         },
-        readyToRegister: function(){
-            if(!this.errorEmail && !this.errorFirstName && !this.errorLastName && !this.errorPassword && this.email != '' && this.firstName != '' && this.lastName != '' && this.password != ''){
-                this.registerReady = true;
-            }
-        },
-        readyToLogin: function(){
-            if(!this.errorEmail && !this.errorPassword && this.email != '' && this.password != ''){
-                this.loginReady = true;
-            }
-        },
 
-        async registerUser(){
-            if(this.mode != 'login'){
+
+        
+        /*async */submitForm(){
+            if(this.mode == 'login'){
+                const payload = {
+                    email: this.email,
+                    password: this.password
+                };
+                const config = {
+                    headers : { 
+                    'Content-Type': "application/json"}
+                };
+                axios.post("http://localhost:3000/api/auth/login", payload, config)
+                .then((res) => {
+                    console.log("la réponse est: " + res.data.message);
+                    if(res.data.message == "Utilisateur non trouvé"){
+                        alert("Utilisateur inconnu");
+                    }else{
+                        if(res.data.message == "Mot de passe incorrect!"){
+                            alert("Mot de passe incorrect");
+                        }else{
+                            let userId = res.data.userId;
+                            localStorage.setItem('userId', userId);
+                            let token = res.data.token;
+                            axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+                            //this.$store.dispatch('updateRecent');
+                            this.$router.push('/home');
+                        }
+                    }
+                })
+                .catch( err =>  console.log("l'erreur est: " + err))
+            }else{
                 const payload = {
                     email: this.email,
                     password: this.password,
                     nom: this.lastName,
                     prenom : this.firstName
                 };
-                const header = { "Sec-Fetch-Site": "cross-site"};
-                await axios.post("http://localhost:3000/api/auth/signup", payload, {header});
-                this.email = "";
-                this.password = "";
-                this.firstName = "";
-                this.lastName = "";
-                this.$router.push('/home');
+                const header = { 
+                    "Content-Type": "application/json"
+                    };
+                /*await */axios.post("http://localhost:3000/api/auth/signup", payload, {header})
+                .then((res) => {
+                    console.log("la réponse est: " + res.data.message);
+                    if(res.data.message == "Absent"){
+                        console.log("Dans if");
+                        this.email = "";
+                        this.password = "";
+                        this.firstName = "";
+                        this.lastName = "";
+                        let userId = res.data.userId;
+                        localStorage.setItem('userId', userId);
+                        let token = res.data.token;
+                        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+                        this.$store.dispatch('updateRecent');
+                        this.$router.push('/home');
+                    }else{
+                        alert("Email déjà utilisé");
+                    }
+                })
+               .catch( err =>  console.log("l'erreur est: " + err))             
             }
         }
-
-
-        /**async registerUser(){
-            if(this.registerReady && this.mode != 'login'){
-                try{
-                    await axios.post("http://localhost:3000/api/auth/signup",{
-                        email: this.email,
-                        password: this.password,
-                        nom: this.lastName,
-                        prenom : this.firstName,
-                    });
-                    this.email = "";
-                    this.password = "";
-                    this.firstName = "";
-                    this.lastName = "";
-                    this.$router.push('/home');
-                }catch(err) {
-                    console.log(err);
-                }
-            }
-        }*/
-
-
-
-        /**
-        checkForm: function() {
-            if(this.mode == 'login'){
-                if(!this.errorEmail && !this.errorPassword){
-                    this.$router.push('/home');
-                }
-            }else{
-                if(!this.errorEmail && !this.errorFirstName && !this.errorLastName && !this.errorPassword){
-                    this.$router.push('/home');
-                }
-            }
-        }
-        **/
-
     }
 }
 </script>

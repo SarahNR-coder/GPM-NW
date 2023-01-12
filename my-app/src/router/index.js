@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 import AccountView from '../views/AccountView.vue'
-import ForumView from '../views/ForumView.vue'
+import ArticleView from '../views/ArticleView.vue'
 import PublishView from '../views/PublishView.vue'
 
 const routes = [
@@ -27,9 +27,9 @@ const routes = [
     component: PublishView
   },
   {
-    path: '/forum/:id',
-    name: 'forum',
-    component: ForumView
+    path: '/article/:id',
+    name: 'article',
+    component: ArticleView
   }
 ]
 

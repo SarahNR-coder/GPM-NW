@@ -6,7 +6,7 @@ const http = require('http');
 const app = require('./app');
 //const cors = require('cors');
 
-let currentDate = new Date();
+let currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 /** Déclaration de normalizePort qui gère les différents cas de connexion*/
 const normalizePort = val => {

@@ -17,6 +17,11 @@
             </article>
             <article class="forum-access__article">
                 <p> Les plus récents</p>
+                <ul>
+                    <li v-for="item in mostRecent" :key="item">
+                        <a @click="goToArticle(item.id)">{{ item.titre }} de userId = {{ item.user_id }}, le {{ item.date_publication }} ({{ item.nombre_likes }} likes)</a>
+                    </li>
+                </ul>
             </article>
         </section>
         <section class="write-article">
@@ -27,9 +32,19 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
+
     export default{
         name: 'HomeView',
+        created() {
+            this.$store.dispatch('updateRecent');
+        },
+        computed: {
 
+            ...mapState({
+                mostRecent: 'mostRecentArticles'
+            })
+        },
         methods:{
             logOut: function(){
                 this.$router.push('/')
@@ -39,6 +54,9 @@
             },
             writeArticle: function(){
                 this.$router.push('/publish')
+            },
+            goToArticle: function(id){
+                this.$router.push(`/article/:${id}`)
             }
         }
     }
